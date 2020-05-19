@@ -865,7 +865,15 @@ class _StackViewState extends _CustomLayoutStateBase<_StackSwiper> {
       offsets = [-space, -space / 3 * 2, -space / 3, 0.0, _swiperWidth];
     } else {
       double space = (_swiperHeight - widget.itemHeight) / 2;
-      offsets = [-space, -space / 3 * 2, -space / 3, 0.0, _swiperHeight];
+      final itemCount = widget.itemCount;
+      if (itemCount >= 3){
+        offsets = [-space, -space / 3 * 2, -space / 3, 0.0, _swiperHeight];
+      } else if (itemCount == 2){
+        offsets = [-space, -space / 3 * 2, 0.0, _swiperHeight];
+      } else {
+        offsets = [-space, 0.0, _swiperHeight];
+      }
+
     }
   }
 
@@ -880,12 +888,33 @@ class _StackViewState extends _CustomLayoutStateBase<_StackSwiper> {
     super.afterRender();
 
     //length of the values array below
-    _animationCount = 5;
+    final itemCount = widget.itemCount;
+    if (itemCount >= 3){
 
-    //Array below this line, '0' index is 1.0 ,witch is the first item show in swiper.
-    _startIndex = -3;
-    scales = [0.7, 0.8, 0.9, 1.0, 1.0];
-    opacity = [0.0, 0.5, 1.0, 1.0, 1.0];
+      _animationCount = 5;
+
+      //Array below this line, '0' index is 1.0 ,witch is the first item show in swiper.
+      _startIndex = -3;
+
+      scales = [0.7, 0.8, 0.9, 1.0, 1.0];
+      opacity = [0.0, 0.5, 1.0, 1.0, 1.0];
+    } else if (itemCount == 2) {
+      _animationCount = 4;
+
+      _startIndex = -2;
+
+      scales = [0.7, 0.8, 0.9, 1.0];
+      opacity = [0.0, 0.5, 1.0, 1.0];
+    } else {
+      // item count == 1 or 0
+
+      _animationCount = 3;
+
+      _startIndex = -1;
+      scales = [0.7, 1.0, 1.0];
+      opacity = [0.0, 1.0, 1.0];
+
+    }
 
     _updateValues();
   }
